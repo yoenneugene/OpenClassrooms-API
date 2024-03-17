@@ -1,97 +1,37 @@
 package com.openclassrooms.api.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.openclassrooms.api.MyData;
-import com.openclassrooms.api.Service.Jsonfilereaderservice;
+import com.openclassrooms.api.Service.PersonService;
 import com.openclassrooms.api.model.Person;
-import com.openclassrooms.api.model.Personn;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class PersonController {
 
     @Autowired
-    private Jsonfilereaderservice jsonfilereaderservice;
+    private PersonService personService;
 
-
-    @GetMapping("/persons1")
-    public String getpersons() {
-        MyData data = jsonfilereaderservice.readAndPrintJsonFile();
-        List<Person> persons = data.getPersons();
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        if (persons == null || persons.isEmpty()) {
-            return "No persons found";
-        }
-
-
-        String json = null;
-        try {
-            json = objectMapper.writeValueAsString(persons);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        return json;
-
-
+    @PostMapping("/person")
+    public ResponseEntity<String> addPerson(@RequestBody Person newPerson) {
+        personService.addPerson(newPerson);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Person added successfully");
     }
 
-    @GetMapping("/firestationstationNumber={stationNumber}")
-    public String getpersonsbynumbestation(@PathVariable String stationNumber) {
-        MyData data = jsonfilereaderservice.readAndPrintJsonFile();
-        return data.getPersonsByStationNumber(stationNumber);
-
-
+    @PutMapping("/person/{firstName}/{lastName}")
+    public ResponseEntity<String> updatePerson(@PathVariable String firstName, @PathVariable String lastName,
+                                               @RequestBody Person updatedPerson) {
+        updatedPerson.setFirstName(firstName);
+        updatedPerson.setLastName(lastName);
+        personService.updatePerson(updatedPerson);
+        return ResponseEntity.ok("Person updated successfully");
     }
 
-    @GetMapping("/childAlert={address}")
-    public String getchild(@PathVariable String address) {
-        MyData data = jsonfilereaderservice.readAndPrintJsonFile();
-
-        return data.getChildAlert(address);
+    @DeleteMapping("/person/{firstName}/{lastName}")
+    public ResponseEntity<String> deletePerson(@PathVariable String firstName, @PathVariable String lastName) {
+        personService.deletePerson(firstName, lastName);
+        return ResponseEntity.ok("Person deleted successfully");
     }
-
-    @GetMapping("/phoneAlertfirestation={stationNumber}")
-    public String getPhonNumber(@PathVariable String stationNumber) {
-        MyData data = jsonfilereaderservice.readAndPrintJsonFile();
-
-        return data.getPhoneNumber(stationNumber);
-
-    }
-    @GetMapping ("/fireaddress={address}")
-    public String getFireAddress(@PathVariable String address) {
-        MyData data = jsonfilereaderservice.readAndPrintJsonFile();
-
-        return data.getFireInfo(address);
-    }
-
-
-    @GetMapping("/flood/firestationsstations={stationNumber}")
-    public String getFireAdress(@PathVariable String stationNumber) {
-        MyData data = jsonfilereaderservice.readAndPrintJsonFile();
-
-        return data.getHouseholdsByFirestation(stationNumber).toString();
-    }
-
-        @GetMapping("/personInfofirstName={firstName}&lastName={lastName}")
-        public String personinfo(@PathVariable String firstName ,@PathVariable String lastName) {
-            MyData data = jsonfilereaderservice.readAndPrintJsonFile();
-
-            return data.getPersonInfo(firstName,lastName).toString();
-        }
-    @GetMapping("/communityEmailcity={city}")
-    public String getEmailByCity(@PathVariable String city) {
-        MyData data = jsonfilereaderservice.readAndPrintJsonFile();
-
-        return data.getMailByCity(city);
-    }
-
-
 }
+

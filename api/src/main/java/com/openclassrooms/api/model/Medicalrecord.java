@@ -2,7 +2,7 @@ package com.openclassrooms.api.model;
 
 import java.util.ArrayList;
 
-public class Medialrecord {
+public class Medicalrecord {
     private String firstName;
     private String lastName;
     private String birthdate;

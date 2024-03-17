@@ -47,7 +47,10 @@
 			<version>0.9.19</version>
 		</dependency>
 
-			 <!-- ou la version correspondant à votre projet -->
+
+
+
+		<!-- ou la version correspondant à votre projet -->
 
 
 	</dependencies>

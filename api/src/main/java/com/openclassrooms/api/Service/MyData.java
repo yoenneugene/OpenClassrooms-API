@@ -1,14 +1,12 @@
-package com.openclassrooms.api;
+package com.openclassrooms.api.Service;
 
 import com.openclassrooms.api.model.*;
 import com.openclassrooms.api.model.Person;
 import org.springframework.stereotype.Service;
 
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,10 +16,10 @@ import java.util.stream.Collectors;
 public class MyData {
     private List<Person> persons;
     private List<Firestation> firestations;
-    private List<Medialrecord> medicalrecords;
+    private List<Medicalrecord> medicalrecords;
 
 
-   public LocalDate date = LocalDate.now();
+
 
 
 
@@ -34,11 +32,11 @@ public class MyData {
         this.firestations = firestations;
     }
 
-    public List<Medialrecord> getMedicalrecords() {
+    public List<Medicalrecord> getMedicalrecords() {
         return medicalrecords;
     }
 
-    public void setMedicalrecords(List<Medialrecord> medicalrecords) {
+    public void setMedicalrecords(List<Medicalrecord> medicalrecords) {
         this.medicalrecords = medicalrecords;
     }
 
@@ -112,14 +110,16 @@ return result.toString();
     private String getBirthdate(String firstName) {
         return medicalrecords.stream()
                 .filter(record -> record.getFirstName().equals(firstName))
-                .map(Medialrecord::getBirthdate)
+                .map(Medicalrecord::getBirthdate)
                 .findFirst()
                 .orElse(null);
     }
 
     private int calculateAge(String birthdate) {
 
-
+        if (birthdate == null) {
+            return 18; // Valeur par défaut pour une date de naissance inconnue
+        }
         LocalDate birth = LocalDate.parse(birthdate, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
         LocalDate now = LocalDate.now();
         return (int) birth.until(now).getYears();
