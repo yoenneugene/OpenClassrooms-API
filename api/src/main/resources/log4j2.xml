@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Appenders>
+        <!-- Appender pour enregistrer les requêtes et les réponses -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+
+        <!-- Appender pour enregistrer les réponses réussies au niveau INFO -->
+        <RollingFile name="SuccessFile" fileName="logs/success.log"
+                     filePattern="logs/success-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <!-- Appender pour enregistrer les erreurs et exceptions au niveau ERROR -->
+        <RollingFile name="ErrorFile" fileName="logs/error.log"
+                     filePattern="logs/error-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <!-- Appender pour enregistrer les étapes ou calculs informatifs au niveau DEBUG -->
+        <RollingFile name="DebugFile" fileName="logs/debug.log"
+                     filePattern="logs/debug-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+    </Appenders>
+
+    <!-- Configurez les loggers -->
+    <Loggers>
+        <!-- Logger pour les requêtes et réponses -->
+        <Logger name="org.apache.http" level="INFO"/>
+
+        <!-- Logger pour les réponses réussies -->
+        <Logger name="com.example.controller" level="INFO">
+            <AppenderRef ref="SuccessFile"/>
+        </Logger>
+
+        <!-- Logger pour les erreurs et exceptions -->
+        <Root level="ERROR">
+            <AppenderRef ref="ErrorFile"/>
+        </Root>
+
+        <!-- Logger pour les étapes ou calculs informatifs -->
+        <Logger name="com.example.service" level="DEBUG">
+            <AppenderRef ref="DebugFile"/>
+        </Logger>
+    </Loggers>
+</Configuration>
